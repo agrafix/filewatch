@@ -24,6 +24,7 @@ loadFileAndObserve wm fp parser =
   do ctRef <- newTVarIO Nothing
      let dir = takeDirectory fp
          updateContent = BSL.readFile fp >>= atomically . writeTVar ctRef . parser
+     updateContent
      quit <- watchDir wm dir (const True) $ \ev ->
        when (takeFileName (eventPath ev) == takeFileName fp) $
        case ev of
